@@ -1209,48 +1209,110 @@ let sampleReminders = [
 ];
             
             // Function to display reminders
-            function displayReminders() {
-                remindersList.innerHTML = '';
-                
-                const allReminders = [...sampleReminders];
-                const savedReminders = JSON.parse(localStorage.getItem('careConnectReminders')) || [];
-                allReminders.push(...savedReminders);
-                
-                if (allReminders.length === 0) {
-                    remindersList.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; font-size: 1.2rem; color: var(--secondary);">No reminders set yet. Add one above!</p>';
-                    return;
-                }
-                
-                allReminders.forEach(reminder => {
-                    const reminderCard = document.createElement('div');
-                    reminderCard.classList.add('reminder-card');
-                    
-                    const dateObj = new Date(reminder.date);
-                    const formattedDate = dateObj.toLocaleDateString('en-US', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                    }) + ' at ' + dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    
-                    reminderCard.innerHTML = `
-                        <div class="reminder-header">
-                            <div class="reminder-title">${reminder.title}</div>
-                            <div class="reminder-type">${reminder.type}</div>
-                        </div>
-                        <div class="reminder-time">
-                            <i class="far fa-clock"></i> ${formattedDate}
-                        </div>
-                        ${reminder.notes ? `<p>${reminder.notes}</p>` : ''}
-                        <div class="reminder-actions">
-                            <button class="edit-reminder" data-id="${reminder.id}"><i class="fas fa-edit"></i></button>
-                            <button class="delete-reminder" data-id="${reminder.id}"><i class="fas fa-trash"></i></button>
-                        </div>
-                    `;
-                    
-                    remindersList.appendChild(reminderCard);
-                });
-            }
+            // Function to display reminders
+function displayReminders() {
+    remindersList.innerHTML = '';
+    
+    const allReminders = [...sampleReminders];
+    const savedReminders = JSON.parse(localStorage.getItem('careConnectReminders')) || [];
+    allReminders.push(...savedReminders);
+    
+    if (allReminders.length === 0) {
+        remindersList.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; font-size: 1.2rem; color: var(--secondary);">No reminders set yet. Add one above!</p>';
+        return;
+    }
+    
+    allReminders.forEach(reminder => {
+        const reminderCard = document.createElement('div');
+        reminderCard.classList.add('reminder-card');
+        reminderCard.dataset.id = reminder.id;
+        
+        const dateObj = new Date(reminder.date);
+        const formattedDate = dateObj.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        }) + ' at ' + dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        
+        reminderCard.innerHTML = `
+            <div class="reminder-header">
+                <div class="reminder-title">${reminder.title}</div>
+                <div class="reminder-type">${reminder.type}</div>
+            </div>
+            <div class="reminder-time">
+                <i class="far fa-clock"></i> ${formattedDate}
+            </div>
+            ${reminder.notes ? `<p>${reminder.notes}</p>` : ''}
+            <div class="reminder-actions">
+                <button class="edit-reminder" data-id="${reminder.id}"><i class="fas fa-edit"></i></button>
+                <button class="delete-reminder" data-id="${reminder.id}"><i class="fas fa-trash"></i></button>
+            </div>
+        `;
+        
+        remindersList.appendChild(reminderCard);
+    });
+    
+    // Add event listeners for delete buttons
+    addDeleteEventListeners();
+}
+
+// Function to handle deletion
+function addDeleteEventListeners() {
+    const deleteButtons = document.querySelectorAll('.delete-reminder');
+    
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const reminderId = this.getAttribute('data-id');
+            deleteReminder(reminderId);
+        });
+    });
+}
+
+// Function to delete a reminder
+function deleteReminder(reminderId) {
+    if (reminderId.startsWith('sample-')) {
+        // Remove from sample reminders
+        sampleReminders = sampleReminders.filter(reminder => reminder.id !== reminderId);
+    } else {
+        // Remove from localStorage
+        const savedReminders = JSON.parse(localStorage.getItem('careConnectReminders')) || [];
+        const updatedReminders = savedReminders.filter(reminder => reminder.id !== reminderId);
+        localStorage.setItem('careConnectReminders', JSON.stringify(updatedReminders));
+    }
+    
+    // Re-display reminders
+    displayReminders();
+    
+    // Show confirmation
+    showNotification('Reminder deleted successfully!');
+}
+
+// Function to show notifications
+function showNotification(message) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--accent);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        box-shadow: var(--shadow);
+        z-index: 1000;
+        font-weight: 600;
+    `;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
             
             // Add new reminder
             reminderForm.addEventListener('submit', function(e) {
