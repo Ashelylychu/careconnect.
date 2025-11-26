@@ -771,7 +771,7 @@
                     </div>
                     <div class="avatar-container">
                         <div class="avatar">
-                            <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" alt="Friendly AI Companion">
+                            <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2pnNmhiOTRiNm5kbjNzcnJicnFzenZmdDgwaG40dXg3bzU1Y2VidCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Lv2VhwHrt6ljhvZ6LF/giphy.gif">
                         </div>
                         <p style="margin-top: 1.5rem; text-align: center; font-weight: 600; color: var(--primary);">Your friendly companion is always here to listen and help!</p>
                     </div>
@@ -799,7 +799,7 @@
                     </div>
                     <div class="avatar-container">
                         <div class="avatar">
-                            <img src="https://media.giphy.com/media/3o7aD2d7hy9ktXNDP2/giphy.gif" alt="Family Support AI">
+                            <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZmowZXR0ZHNpbDR1cWlvaW5vdmN6dXphNTA4aWtudjl0MjBpMjh0ciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1JmGiBtqTuehfYxuy9/giphy.gif" alt="Family Support AI">
                         </div>
                         <p style="margin-top: 1.5rem; text-align: center; font-weight: 600; color: var(--primary);">Stay connected with your loved one's care and wellbeing.</p>
                     </div>
@@ -910,7 +910,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2023 CareConnect. All rights reserved. | Bridging Generations with Technology</p>
+                <p>&copy; 2025 CareConnect. All rights reserved. | Bridging Generations with Technology</p>
             </div>
         </div>
     </footer>
@@ -1180,29 +1180,33 @@
             const remindersList = document.getElementById('reminders-list');
             
             // Sample reminders
-            const sampleReminders = [
-                {
-                    id: 1,
-                    title: 'Take Blood Pressure Medication',
-                    type: 'medication',
-                    date: '2023-12-01T08:00',
-                    notes: 'Take with food'
-                },
-                {
-                    id: 2,
-                    title: 'Annual Check-up with Dr. Smith',
-                    type: 'appointment',
-                    date: '2023-12-05T14:30',
-                    notes: 'Bring recent test results'
-                },
-                {
-                    id: 3,
-                    title: 'Morning Stretch Routine',
-                    type: 'exercise',
-                    date: '2023-11-30T09:00',
-                    notes: 'Gentle stretches for 15 minutes'
-                }
-            ];
+            // Sample reminders - now with proper deletion support
+let sampleReminders = [
+    {
+        id: 'sample-1',
+        title: 'Take Blood Pressure Medication',
+        type: 'medication',
+        date: '2023-12-01T08:00',
+        notes: 'Take with food',
+        isSample: true // Mark as sample for easy identification
+    },
+    {
+        id: 'sample-2',
+        title: 'Annual Check-up with Dr. Smith',
+        type: 'appointment',
+        date: '2023-12-05T14:30',
+        notes: 'Bring recent test results',
+        isSample: true
+    },
+    {
+        id: 'sample-3',
+        title: 'Morning Stretch Routine',
+        type: 'exercise',
+        date: '2023-11-30T09:00',
+        notes: 'Gentle stretches for 15 minutes',
+        isSample: true
+    }
+];
             
             // Function to display reminders
             function displayReminders() {
