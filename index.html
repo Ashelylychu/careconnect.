@@ -672,6 +672,26 @@
                 margin-bottom: 2rem;
             }
         }
+
+       /* ConvAI Typing Indicators */
+#typing-indicator, #family-typing-indicator {
+    font-style: italic;
+    color: var(--secondary);
+    background: var(--light) !important;
+    border: 1px solid var(--light) !important;
+}
+
+#typing-indicator i, #family-typing-indicator i {
+    animation: pulse 1.5s infinite;
+    margin-right: 8px;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+} 
+    
     </style>
 </head>
 <body>
@@ -978,39 +998,97 @@
                 elderlyChatMessages.appendChild(messageDiv);
                 elderlyChatMessages.scrollTop = elderlyChatMessages.scrollHeight;
             }
+
+// ConvAI API Configuration
+const CONVAI_API_KEY = 'cb74519ec98ddf93a1398466e579429c
+const CONVAI_CHARACTER_ID = 'bc92c99a-ca7b-11f0-bd36-42010a7be027'; // 
+
+// Function to call ConvAI API
+async function callConvAIAPI(message, isElderlyTab = true) {
+    try {
+        const response = await fetch('https://api.convai.com/character/getResponse', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'CONVAI-API-KEY': CONVAI_API_KEY
+            },
+            body: JSON.stringify({
+                characterID: CONVAI_CHARACTER_ID,
+                userText: message,
+                sessionID: isElderlyTab ? 'elderly-session' : 'family-session',
+                voiceResponse: false
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.responseText || "I'm here to help! What would you like to know?";
+    } catch (error) {
+        console.error('ConvAI API Error:', error);
+        // Fallback responses if API fails
+        return getFallbackResponse(message, isElderlyTab);
+    }
+}
+
+// Fallback responses in case API fails
+function getFallbackResponse(message, isElderlyTab) {
+    const lowerMessage = message.toLowerCase();
+    
+    if (isElderlyTab) {
+        if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+            return "Hello! It's so nice to talk with you today. How are you feeling?";
+        }
+        return "I'm here to assist you with reminders, keep you company, or help with anything you need.";
+    } else {
+        return "I can provide updates on your loved one and care recommendations.";
+    }
+}
             
-            // Function to get elderly bot response (simulating ConvAI)
-            function getElderlyBotResponse(userMessage) {
-                // In a real implementation, this would be an API call to ConvAI
-                // For now, we'll use the predefined responses
-                
-                const lowerMessage = userMessage.toLowerCase();
-                
-                for (const key in elderlyBotResponses) {
-                    if (lowerMessage.includes(key)) {
-                        return elderlyBotResponses[key];
-                    }
-                }
-                
-                return elderlyBotResponses['default'];
-            }
+           // Function to get elderly bot response from ConvAI
+async function getElderlyBotResponse(userMessage) {
+    return await callConvAIAPI(userMessage, true);
+}
             
             // Send elderly message function
-            function sendElderlyMessage() {
-                const message = elderlyInput.value.trim();
-                if (message === '') return;
-                
-                addElderlyMessage(message, true);
-                elderlyInput.value = '';
-                
-                // Store the elderly's message for family view
-                storeElderlyMessage(message);
-                
-                // Simulate thinking delay (like waiting for ConvAI response)
-                setTimeout(() => {
-                    const response = getElderlyBotResponse(message);
-                    addElderlyMessage(response, false);
-                }, 1000);
+async function sendElderlyMessage() {
+    const message = elderlyInput.value.trim();
+    if (message === '') return;
+    
+    addElderlyMessage(message, true);
+    elderlyInput.value = '';
+    
+    // Store the elderly's message for family view
+    storeElderlyMessage(message);
+    
+    // Show typing indicator
+    const typingIndicator = document.createElement('div');
+    typingIndicator.classList.add('message', 'bot-message');
+    typingIndicator.id = 'typing-indicator';
+    typingIndicator.innerHTML = '<i class="fas fa-ellipsis-h"></i> Thinking...';
+    elderlyChatMessages.appendChild(typingIndicator);
+    elderlyChatMessages.scrollTop = elderlyChatMessages.scrollHeight;
+    
+    try {
+        // Get response from ConvAI
+        const response = await getElderlyBotResponse(message);
+        
+        // Remove typing indicator
+        document.getElementById('typing-indicator')?.remove();
+        
+        // Add the actual response
+        addElderlyMessage(response, false);
+    } catch (error) {
+        // Remove typing indicator
+        document.getElementById('typing-indicator')?.remove();
+        
+        // Show error message
+        addElderlyMessage("I'm having trouble connecting right now. Please try again in a moment.", false);
+        console.error('Chat error:', error);
+    }
+}
             }
             
             // Event listeners for elderly chat
@@ -1120,41 +1198,52 @@
                 'default': 'I can provide updates on your loved one, help with care recommendations, or assist with reminder settings.'
             };
             
-            // Function to get family bot response (simulating ConvAI)
-            function getFamilyBotResponse(userMessage) {
-                // In a real implementation, this would be an API call to ConvAI
-                const lowerMessage = userMessage.toLowerCase();
-                
-                for (const key in familyBotResponses) {
-                    if (lowerMessage.includes(key)) {
-                        return familyBotResponses[key];
-                    }
-                }
-                
-                return familyBotResponses['default'];
-            }
+            // Function to get family bot response from ConvAI
+async function getFamilyBotResponse(userMessage) {
+    return await callConvAIAPI(userMessage, false);
+}
             
             // Send family message function
-            function sendFamilyMessage() {
-                const message = familyInput.value.trim();
-                if (message === '') return;
-                
-                addFamilyMessage(message, true);
-                familyInput.value = '';
-                
-                // Simulate thinking delay (like waiting for ConvAI response)
-                setTimeout(() => {
-                    const response = getFamilyBotResponse(message);
-                    addFamilyMessage(response, false);
-                    
-                    // If asking for an update, show recent elderly messages
-                    if (message.toLowerCase().includes('how') || message.toLowerCase().includes('update')) {
-                        setTimeout(() => {
-                            updateFamilyChat();
-                        }, 500);
-                    }
-                }, 1000);
-            }
+async function sendFamilyMessage() {
+    const message = familyInput.value.trim();
+    if (message === '') return;
+    
+    addFamilyMessage(message, true);
+    familyInput.value = '';
+    
+    // Show typing indicator
+    const typingIndicator = document.createElement('div');
+    typingIndicator.classList.add('message', 'bot-message');
+    typingIndicator.id = 'family-typing-indicator';
+    typingIndicator.innerHTML = '<i class="fas fa-ellipsis-h"></i> Getting updates...';
+    familyChatMessages.appendChild(typingIndicator);
+    familyChatMessages.scrollTop = familyChatMessages.scrollHeight;
+    
+    try {
+        // Get response from ConvAI
+        const response = await getFamilyBotResponse(message);
+        
+        // Remove typing indicator
+        document.getElementById('family-typing-indicator')?.remove();
+        
+        // Add the actual response
+        addFamilyMessage(response, false);
+        
+        // If asking for an update, show recent elderly messages
+        if (message.toLowerCase().includes('how') || message.toLowerCase().includes('update')) {
+            setTimeout(() => {
+                updateFamilyChat();
+            }, 500);
+        }
+    } catch (error) {
+        // Remove typing indicator
+        document.getElementById('family-typing-indicator')?.remove();
+        
+        // Show error message
+        addFamilyMessage("I'm having trouble accessing the information right now. Please try again.", false);
+        console.error('Family chat error:', error);
+    }
+}
             
             // Event listeners for family chat
             familySendBtn.addEventListener('click', sendFamilyMessage);
