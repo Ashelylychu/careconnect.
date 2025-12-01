@@ -647,7 +647,35 @@
             color: var(--secondary);
             margin-bottom: 0.5rem;
         }
+/* Add this new style */
+.convai-button-container {
+    text-align: center;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, var(--light), var(--pale));
+    border-radius: 15px;
+    border: 2px solid var(--accent);
+}
 
+.convai-launch-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: var(--transition);
+    box-shadow: 0 6px 20px rgba(106, 17, 203, 0.4);
+}
+
+.convai-launch-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(106, 17, 203, 0.6);
+}
         @media (max-width: 968px) {
             .header-content {
                 flex-direction: column;
@@ -742,41 +770,66 @@
         </div>
     </section>
 
-    <section class="container" id="ai-assistant">
-        <div class="tab-container">
-            <h2 class="section-title">AI Communication Assistant</h2>
-            <div class="tabs">
-                <button class="tab active" data-tab="elderly">Elderly Interface</button>
-                <button class="tab" data-tab="family">Family Interface</button>
-            </div>
+<section class="container" id="ai-assistant">
+    <div class="tab-container">
+        <h2 class="section-title">AI Communication Assistant</h2>
+        
+        <!-- ADD THIS BUTTON SECTION -->
+        <div class="convai-button-container">
+            <h3 style="color: var(--primary); margin-bottom: 1rem;">
+                <i class="fas fa-robot"></i> Chat with Our AI Companion
+            </h3>
+            <p style="margin-bottom: 1.5rem; font-size: 1.1rem;">
+                Click the button below to start talking with our friendly AI assistant!
+            </p>
             
-            <div class="tab-content active" id="elderly-tab">
-                <div class="convai-integration">
-                    <p><i class="fas fa-robot"></i> Powered by ConvAI - Advanced conversational AI</p>
+            <!-- YOUR CONVAI LINK GOES HERE -->
+            <a href="https://x.convai.com/?xpid=2a2c1006-c1b3-4b22-bdf2-c6cd185d5d69&type=unlisted" 
+               target="_blank" 
+               class="convai-launch-btn">
+                <i class="fas fa-comment-dots"></i>
+                Start Talking to Me!
+            </a>
+            
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--secondary);">
+                <i class="fas fa-external-link-alt"></i> Opens in new window • <i class="fas fa-microphone"></i> Voice & Text • <i class="fas fa-heart"></i> Always Friendly
+            </p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" data-tab="elderly">Elderly Interface</button>
+            <button class="tab" data-tab="family">Family Interface</button>
+        </div>
+        
+        <div class="tab-content active" id="elderly-tab">
+            <div class="convai-integration">
+                <p><i class="fas fa-robot"></i> Click the "Start Talking to Me!" button above to open our AI assistant</p>
+            </div>
+            <div class="chat-container">
+                <div class="chat-interface">
+                    <div class="chat-header">
+                        <h3>Your Friendly Companion</h3>
+                    </div>
+                    <div class="chat-messages" id="elderly-chat-messages">
+                        <div class="message bot-message">
+                            Hello! Click the button above to start chatting with me. I'm here to help with conversation, reminders, and companionship.
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="elderly-input" placeholder="Click the button above to start chatting...">
+                        <button id="elderly-send-btn"><i class="fas fa-paper-plane"></i></button>
+                    </div>
                 </div>
-                <div class="chat-container">
-                    <div class="chat-interface">
-                        <div class="chat-header">
-                            <h3>Your Friendly Companion</h3>
-                        </div>
-                        <div class="chat-messages" id="elderly-chat-messages">
-                            <div class="message bot-message">
-                                Hello there! I'm your friendly companion. How are you feeling today? I'm here to chat, help with reminders, or just keep you company.
-                            </div>
-                        </div>
-                        <div class="chat-input">
-                            <input type="text" id="elderly-input" placeholder="Type your message here...">
-                            <button id="elderly-send-btn"><i class="fas fa-paper-plane"></i></button>
-                        </div>
+                <div class="avatar-container">
+                    <div class="avatar">
+                        <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2pnNmhiOTRiNm5kbjNzcnJicnFzenZmdDgwaG40dXg3bzU1Y2VidCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Lv2VhwHrt6ljhvZ6LF/giphy.gif">
                     </div>
-                    <div class="avatar-container">
-                        <div class="avatar">
-                            <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2pnNmhiOTRiNm5kbjNzcnJicnFzenZmdDgwaG40dXg3bzU1Y2VidCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Lv2VhwHrt6ljhvZ6LF/giphy.gif">
-                        </div>
-                        <p style="margin-top: 1.5rem; text-align: center; font-weight: 600; color: var(--primary);">Your friendly companion is always here to listen and help!</p>
-                    </div>
+                    <p style="margin-top: 1.5rem; text-align: center; font-weight: 600; color: var(--primary);">
+                        Your AI companion is just a click away!
+                    </p>
                 </div>
             </div>
+        </div>
             
             <div class="tab-content" id="family-tab">
                 <div class="convai-integration">
