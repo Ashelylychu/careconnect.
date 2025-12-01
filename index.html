@@ -993,27 +993,12 @@
     <script>
         // Tab functionality
         document.addEventListener('DOMContentLoaded', function() {
-            const tabs = document.querySelectorAll('.tab');
-            const tabContents = document.querySelectorAll('.tab-content');
-            
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabId = tab.getAttribute('data-tab');
-                    
-                    // Remove active class from all tabs and contents
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tabContents.forEach(c => c.classList.remove('active'));
-                    
-                    // Add active class to clicked tab and corresponding content
-                    tab.classList.add('active');
-                    document.getElementById(`${tabId}-tab`).classList.add('active');
-                });
-            });
-            
-            // ConvAI Integration - This is a simulation since direct integration requires backend
-            // In a real implementation, you would make API calls to ConvAI here
-            
             <script>
+    // Your Convai Credentials - REPLACE THESE WITH YOUR ACTUAL KEYS!
+    const CONVAI_API_KEY = "cb74519ec98ddf93a1398466e579429c"; // Replace with your actual API key
+    const CONVAI_CHARACTER_ID = "bc92c99a-ca7b-11f0-bd36-42010a7be027
+"; // Replace with your actual Character ID
+    
     // Tab functionality
     document.addEventListener('DOMContentLoaded', function() {
         const tabs = document.querySelectorAll('.tab');
@@ -1023,210 +1008,74 @@
             tab.addEventListener('click', () => {
                 const tabId = tab.getAttribute('data-tab');
                 
-                // Remove active class from all tabs and contents
                 tabs.forEach(t => t.classList.remove('active'));
                 tabContents.forEach(c => c.classList.remove('active'));
                 
-                // Add active class to clicked tab and corresponding content
                 tab.classList.add('active');
                 document.getElementById(`${tabId}-tab`).classList.add('active');
             });
         });
         
-        // ==================== CONVAI INTEGRATION ====================
+        // ========== CONVAI CHATBOT INTEGRATION ==========
         let convaiSession = null;
         let isRecording = false;
         
-        // Convai Configuration
-        const convaiConfig = {
-            apiKey: '',
-            characterId: '',
-            sessionId: `careconnect-${Date.now()}`,
-            enableAudio: true
-        };
-        
-        // Load saved settings
-        const savedSettings = localStorage.getItem('careConnectConvaiSettings');
-        if (savedSettings) {
+        // Initialize Convai chatbot automatically
+        async function initializeConvaiBot() {
+            if (!CONVAI_API_KEY || CONVAI_API_KEY === "YOUR_API_KEY_HERE" || 
+                !CONVAI_CHARACTER_ID || CONVAI_CHARACTER_ID === "YOUR_CHARACTER_ID_HERE") {
+                console.error("Please add your Convai API credentials in the script!");
+                addElderlyMessage("⚠️ Please configure Convai API credentials to enable the AI chatbot.", false);
+                return;
+            }
+            
             try {
-                const settings = JSON.parse(savedSettings);
-                convaiConfig.apiKey = settings.apiKey || '';
-                convaiConfig.characterId = settings.characterId || '';
+                // Create unique session ID
+                const sessionId = `careconnect_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
                 
-                if (convaiConfig.apiKey) {
-                    document.getElementById('convai-api-key').value = convaiConfig.apiKey;
-                }
-                if (convaiConfig.characterId) {
-                    document.getElementById('convai-character-id').value = convaiConfig.characterId;
-                }
-            } catch (e) {
-                console.error('Error loading Convai settings:', e);
-            }
-        }
-        
-        // Save Settings Button
-        document.getElementById('save-settings').addEventListener('click', function() {
-            const apiKey = document.getElementById('convai-api-key').value.trim();
-            const characterId = document.getElementById('convai-character-id').value.trim();
-            
-            if (!apiKey || !characterId) {
-                showSettingsStatus('Please enter both API Key and Character ID', 'error');
-                return;
-            }
-            
-            convaiConfig.apiKey = apiKey;
-            convaiConfig.characterId = characterId;
-            
-            // Save to localStorage
-            localStorage.setItem('careConnectConvaiSettings', JSON.stringify({
-                apiKey: apiKey,
-                characterId: characterId,
-                savedAt: new Date().toISOString()
-            }));
-            
-            showSettingsStatus('Settings saved successfully! You can now start ConvAI.', 'success');
-            
-            // Enable start button
-            document.getElementById('start-convai').disabled = false;
-        });
-        
-        function showSettingsStatus(message, type) {
-            const statusEl = document.getElementById('settings-status');
-            statusEl.textContent = message;
-            statusEl.style.display = 'block';
-            statusEl.style.background = type === 'error' ? '#ffebee' : '#e8f5e8';
-            statusEl.style.color = type === 'error' ? '#c62828' : '#2e7d32';
-            statusEl.style.border = type === 'error' ? '1px solid #ffcdd2' : '1px solid #c8e6c9';
-            
-            setTimeout(() => {
-                statusEl.style.display = 'none';
-            }, 5000);
-        }
-        
-        // Start ConvAI Session
-        document.getElementById('start-convai').addEventListener('click', async function() {
-            if (!convaiConfig.apiKey || !convaiConfig.characterId) {
-                alert('Please enter your Convai API Key and Character ID in the Settings tab first.');
-                return;
-            }
-            
-            try {
-                // Initialize Convai Session
+                // Initialize Convai session
                 convaiSession = new window.Convai({
-                    apiKey: convaiConfig.apiKey,
-                    characterId: convaiConfig.characterId,
-                    sessionId: convaiConfig.sessionId,
-                    enableAudio: convaiConfig.enableAudio
+                    apiKey: CONVAI_API_KEY,
+                    characterId: CONVAI_CHARACTER_ID,
+                    sessionId: sessionId,
+                    enableAudio: true
                 });
                 
                 await convaiSession.init();
                 
-                // Update UI
-                this.innerHTML = '<i class="fas fa-check"></i> Connected';
-                this.style.background = 'linear-gradient(to right, #27ae60, #2ecc71)';
+                // Add connection message
+                addElderlyMessage("✅ AI Assistant connected! You can now chat with me.", false);
                 
-                document.getElementById('voice-input').disabled = false;
-                document.getElementById('stop-convai').disabled = false;
-                
-                addElderlyMessage("ConvAI Assistant connected! You can now chat with me using text or voice.", false);
-                
-                // Set up text response handler
+                // Set up response handlers
                 convaiSession.onTextResponse((response) => {
                     if (response && response.text) {
                         addElderlyMessage(response.text, false);
                     }
                 });
                 
-                // Set up audio response handler
                 convaiSession.onAudioResponse(() => {
-                    console.log('Audio response received');
+                    console.log('Audio response received from Convai');
                 });
                 
+                console.log("Convai chatbot initialized successfully!");
+                
             } catch (error) {
-                console.error('ConvAI Error:', error);
-                alert('Failed to connect to ConvAI. Check your credentials and try again.');
+                console.error("Failed to initialize Convai:", error);
+                addElderlyMessage("❌ Could not connect to AI assistant. Please check your internet connection.", false);
             }
-        });
+        }
         
-        // Voice Input Toggle
-        document.getElementById('voice-input').addEventListener('click', async function() {
-            if (!convaiSession) {
-                alert('Please start ConvAI session first.');
-                return;
-            }
-            
-            if (!isRecording) {
-                // Start recording
-                isRecording = true;
-                this.innerHTML = '<i class="fas fa-microphone-slash"></i> Stop Listening';
-                this.style.background = 'linear-gradient(to right, #e74c3c, #c0392b)';
-                
-                try {
-                    await convaiSession.startAudio();
-                    addElderlyMessage("[Listening... Speak now]", true);
-                } catch (error) {
-                    console.error('Audio start error:', error);
-                    isRecording = false;
-                    this.innerHTML = '<i class="fas fa-microphone"></i> Voice Chat';
-                    this.style.background = 'linear-gradient(to right, #27ae60, #2ecc71)';
-                }
-                
-            } else {
-                // Stop recording
-                isRecording = false;
-                this.innerHTML = '<i class="fas fa-microphone"></i> Voice Chat';
-                this.style.background = 'linear-gradient(to right, #27ae60, #2ecc71)';
-                
-                try {
-                    await convaiSession.stopAudio();
-                } catch (error) {
-                    console.error('Audio stop error:', error);
-                }
-            }
-        });
+        // Start Convai on page load
+        setTimeout(() => {
+            initializeConvaiBot();
+        }, 1000);
         
-        // Stop ConvAI Session
-        document.getElementById('stop-convai').addEventListener('click', function() {
-            if (convaiSession) {
-                convaiSession.close();
-                convaiSession = null;
-            }
-            
-            isRecording = false;
-            
-            // Reset UI
-            document.getElementById('start-convai').innerHTML = '<i class="fas fa-play"></i> Start ConvAI';
-            document.getElementById('start-convai').style.background = '';
-            
-            document.getElementById('voice-input').innerHTML = '<i class="fas fa-microphone"></i> Voice Chat';
-            document.getElementById('voice-input').style.background = 'linear-gradient(to right, #27ae60, #2ecc71)';
-            document.getElementById('voice-input').disabled = true;
-            
-            document.getElementById('stop-convai').disabled = true;
-            
-            addElderlyMessage("ConvAI session ended. Click 'Start ConvAI' to reconnect.", false);
-        });
-        
-        // ==================== EXISTING CHAT FUNCTIONALITY ====================
-        // Elderly Chatbot functionality
+        // ========== CHAT FUNCTIONALITY ==========
         const elderlyChatMessages = document.getElementById('elderly-chat-messages');
         const elderlyInput = document.getElementById('elderly-input');
         const elderlySendBtn = document.getElementById('elderly-send-btn');
         
-        // Predefined responses for fallback
-        const elderlyBotResponses = {
-            'hello': 'Hello! It\'s so nice to talk with you today. How are you feeling?',
-            'hi': 'Hi there! I\'m here to keep you company. What would you like to talk about?',
-            'how are you': 'I\'m doing wonderfully, thank you for asking! I\'m here to help you with anything you need.',
-            'lonely': 'I\'m sorry you\'re feeling lonely. I\'m here with you. Would you like to hear a funny story or maybe do a puzzle together?',
-            'bored': 'Let\'s find something fun to do! We could listen to music, watch a video, or I could tell you a joke.',
-            'medication': 'I can help remind you about your medications. Would you like me to set up a reminder for you?',
-            'appointment': 'I can help you remember your doctor\'s appointments. Let me know when your next appointment is!',
-            'thank you': 'You\'re very welcome! It\'s my pleasure to help you. Is there anything else you need?',
-            'default': 'I\'m here to assist you with reminders, keep you company, or help with anything you need. What would you like to do today?'
-        };
-        
-        // Function to add a message to the elderly chat
+        // Function to add message to chat
         function addElderlyMessage(message, isUser) {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message');
@@ -1236,52 +1085,45 @@
             elderlyChatMessages.scrollTop = elderlyChatMessages.scrollHeight;
         }
         
-        // Function to get elderly bot response (fallback when Convai not connected)
-        function getElderlyBotResponse(userMessage) {
-            const lowerMessage = userMessage.toLowerCase();
-            
-            for (const key in elderlyBotResponses) {
-                if (lowerMessage.includes(key)) {
-                    return elderlyBotResponses[key];
-                }
-            }
-            
-            return elderlyBotResponses['default'];
-        }
-        
-        // Send elderly message function
+        // Send message to Convai
         async function sendElderlyMessage() {
             const message = elderlyInput.value.trim();
             if (message === '') return;
             
+            // Add user message to chat
             addElderlyMessage(message, true);
             elderlyInput.value = '';
             
-            // Store the elderly's message for family view
+            // Store for family view
             storeElderlyMessage(message);
             
-            // If Convai is connected, use it
+            // Send to Convai if connected
             if (convaiSession) {
                 try {
                     await convaiSession.sendTextMessage(message);
                 } catch (error) {
-                    console.error('Convai send error:', error);
-                    // Fallback to local responses
+                    console.error('Error sending to Convai:', error);
+                    // Fallback response
                     setTimeout(() => {
-                        const response = getElderlyBotResponse(message);
-                        addElderlyMessage(response, false);
+                        const responses = [
+                            "I'm having trouble connecting right now. Please try again!",
+                            "Let me think about that...",
+                            "That's interesting! Tell me more.",
+                            "How are you feeling today?"
+                        ];
+                        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                        addElderlyMessage(randomResponse, false);
                     }, 1000);
                 }
             } else {
-                // Use local responses
+                // Fallback while Convai connects
                 setTimeout(() => {
-                    const response = getElderlyBotResponse(message);
-                    addElderlyMessage(response, false);
+                    addElderlyMessage("I'm still connecting to the AI assistant. Please wait a moment...", false);
                 }, 1000);
             }
         }
         
-        // Event listeners for elderly chat
+        // Event listeners for chat
         elderlySendBtn.addEventListener('click', sendElderlyMessage);
         elderlyInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
@@ -1289,8 +1131,63 @@
             }
         });
         
-        // ==================== FAMILY CHAT ====================
-        // Family Chatbot functionality (Keep existing code, but add Convai check)
+        // ========== VOICE CHAT FUNCTIONALITY ==========
+        // Add voice button to the chat interface
+        const chatInputDiv = document.querySelector('.chat-input');
+        const voiceButton = document.createElement('button');
+        voiceButton.innerHTML = '<i class="fas fa-microphone"></i>';
+        voiceButton.style.cssText = `
+            background: linear-gradient(to right, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-left: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(39, 174, 96, 0.4);
+        `;
+        
+        chatInputDiv.insertBefore(voiceButton, elderlySendBtn);
+        
+        // Voice toggle functionality
+        voiceButton.addEventListener('click', async function() {
+            if (!convaiSession) {
+                addElderlyMessage("Please wait for AI assistant to connect...", false);
+                return;
+            }
+            
+            if (!isRecording) {
+                // Start recording
+                isRecording = true;
+                voiceButton.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                voiceButton.style.background = 'linear-gradient(to right, #e74c3c, #c0392b)';
+                
+                try {
+                    await convaiSession.startAudio();
+                    addElderlyMessage("[Listening... Speak now]", true);
+                } catch (error) {
+                    console.error('Audio error:', error);
+                    isRecording = false;
+                    voiceButton.innerHTML = '<i class="fas fa-microphone"></i>';
+                    voiceButton.style.background = 'linear-gradient(to right, #27ae60, #2ecc71)';
+                }
+            } else {
+                // Stop recording
+                isRecording = false;
+                voiceButton.innerHTML = '<i class="fas fa-microphone"></i>';
+                voiceButton.style.background = 'linear-gradient(to right, #27ae60, #2ecc71)';
+                
+                try {
+                    await convaiSession.stopAudio();
+                } catch (error) {
+                    console.error('Audio stop error:', error);
+                }
+            }
+        });
+        
+        // ========== FAMILY CHAT ==========
         const familyChatMessages = document.getElementById('family-chat-messages');
         const familyInput = document.getElementById('family-input');
         const familySendBtn = document.getElementById('family-send-btn');
@@ -1304,71 +1201,51 @@
                 timestamp: new Date().toLocaleString()
             });
             
-            // Keep only the last 10 messages
             if (elderlyMessages.length > 10) {
                 elderlyMessages = elderlyMessages.slice(-10);
             }
             
-            // Update family view if active
             if (document.getElementById('family-tab').classList.contains('active')) {
                 updateFamilyChat();
             }
         }
         
-        // Update family chat with elderly messages and insights
         function updateFamilyChat() {
-            // Clear current messages except the first one
             while (familyChatMessages.children.length > 1) {
                 familyChatMessages.removeChild(familyChatMessages.lastChild);
             }
             
-            // Add elderly messages and insights
             if (elderlyMessages.length > 0) {
                 const recentMessage = elderlyMessages[elderlyMessages.length - 1];
                 addFamilyMessage(`Your loved one recently said: "${recentMessage.text}"`, false);
                 
-                // Add care insights based on the message
                 const insight = generateCareInsight(recentMessage.text);
                 if (insight) {
                     addFamilyMessage(insight, false);
                 }
             } else {
-                addFamilyMessage("No recent messages from your loved one yet. Check back later for updates.", false);
+                addFamilyMessage("No recent messages from your loved one yet.", false);
             }
         }
         
-        // Generate care insights based on elderly messages
         function generateCareInsight(message) {
             const lowerMessage = message.toLowerCase();
             
             if (lowerMessage.includes('lonely') || lowerMessage.includes('alone')) {
-                return "Insight: Your loved one might be feeling lonely. Consider scheduling a video call or visit soon.";
+                return "Insight: Your loved one might be feeling lonely. Consider scheduling a video call.";
             }
             
             if (lowerMessage.includes('pain') || lowerMessage.includes('hurt')) {
-                return "Insight: Your loved one mentioned discomfort. You may want to check if they need medical attention.";
+                return "Insight: Your loved one mentioned discomfort. Check if they need medical attention.";
             }
             
             if (lowerMessage.includes('tired') || lowerMessage.includes('sleep')) {
-                return "Insight: Your loved one seems to be experiencing fatigue. Ensure they're maintaining a healthy sleep schedule.";
-            }
-            
-            if (lowerMessage.includes('happy') || lowerMessage.includes('good')) {
-                return "Insight: Great! Your loved one seems to be in good spirits today.";
-            }
-            
-            if (lowerMessage.includes('medication') || lowerMessage.includes('pill')) {
-                return "Insight: Your loved one is thinking about medications. Verify they're taking them as prescribed.";
-            }
-            
-            if (lowerMessage.includes('food') || lowerMessage.includes('eat')) {
-                return "Insight: Your loved one mentioned food. Check if they're maintaining a balanced diet.";
+                return "Insight: Your loved one seems tired. Check their sleep schedule.";
             }
             
             return null;
         }
         
-        // Function to add a message to the family chat
         function addFamilyMessage(message, isUser) {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message');
@@ -1378,18 +1255,14 @@
             familyChatMessages.scrollTop = familyChatMessages.scrollHeight;
         }
         
-        // Predefined responses for the family chatbot
         const familyBotResponses = {
             'how are they': 'Let me check on your loved one...',
             'update': 'Here\'s the latest from your loved one:',
-            'reminders': 'You can set up reminders for your loved one in the Reminders section.',
-            'medication': 'Make sure your loved one is taking their medications as prescribed.',
-            'appointment': 'Don\'t forget to accompany your loved one to their next appointment.',
-            'thank you': 'You\'re welcome! I\'m here to help you care for your loved one.',
-            'default': 'I can provide updates on your loved one, help with care recommendations, or assist with reminder settings.'
+            'reminders': 'Check the Reminders section for scheduled items.',
+            'thank you': 'You\'re welcome!',
+            'default': 'I can provide updates on your loved one.'
         };
         
-        // Function to get family bot response
         function getFamilyBotResponse(userMessage) {
             const lowerMessage = userMessage.toLowerCase();
             
@@ -1402,7 +1275,6 @@
             return familyBotResponses['default'];
         }
         
-        // Send family message function
         function sendFamilyMessage() {
             const message = familyInput.value.trim();
             if (message === '') return;
@@ -1410,12 +1282,10 @@
             addFamilyMessage(message, true);
             familyInput.value = '';
             
-            // Simulate thinking delay
             setTimeout(() => {
                 const response = getFamilyBotResponse(message);
                 addFamilyMessage(response, false);
                 
-                // If asking for an update, show recent elderly messages
                 if (message.toLowerCase().includes('how') || message.toLowerCase().includes('update')) {
                     setTimeout(() => {
                         updateFamilyChat();
@@ -1424,7 +1294,6 @@
             }, 1000);
         }
         
-        // Event listeners for family chat
         familySendBtn.addEventListener('click', sendFamilyMessage);
         familyInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
@@ -1432,8 +1301,7 @@
             }
         });
         
-        // ==================== EXISTING VIDEO CAROUSEL ====================
-        // Video carousel functionality
+        // ========== EXISTING VIDEO CAROUSEL ==========
         const videoContainer = document.getElementById('video-container');
         const prevBtn = document.getElementById('prev-video');
         const nextBtn = document.getElementById('next-video');
@@ -1452,12 +1320,10 @@
         prevBtn.addEventListener('click', () => showVideo(currentVideoIndex - 1));
         nextBtn.addEventListener('click', () => showVideo(currentVideoIndex + 1));
         
-        // ==================== EXISTING REMINDERS ====================
-        // Reminders functionality
+        // ========== EXISTING REMINDERS ==========
         const reminderForm = document.getElementById('reminder-form');
         const remindersList = document.getElementById('reminders-list');
         
-        // Sample reminders
         let sampleReminders = [
             {
                 id: 'sample-1',
@@ -1485,7 +1351,6 @@
             }
         ];
         
-        // Function to display reminders
         function displayReminders() {
             remindersList.innerHTML = '';
             
@@ -1529,11 +1394,9 @@
                 remindersList.appendChild(reminderCard);
             });
             
-            // Add event listeners for delete buttons
             addDeleteEventListeners();
         }
         
-        // Function to handle deletion
         function addDeleteEventListeners() {
             const deleteButtons = document.querySelectorAll('.delete-reminder');
             
@@ -1545,28 +1408,18 @@
             });
         }
         
-        // Function to delete a reminder
         function deleteReminder(reminderId) {
             if (reminderId.startsWith('sample-')) {
-                // Remove from sample reminders
                 sampleReminders = sampleReminders.filter(reminder => reminder.id !== reminderId);
             } else {
-                // Remove from localStorage
                 const savedReminders = JSON.parse(localStorage.getItem('careConnectReminders')) || [];
                 const updatedReminders = savedReminders.filter(reminder => reminder.id !== reminderId);
                 localStorage.setItem('careConnectReminders', JSON.stringify(updatedReminders));
             }
             
-            // Re-display reminders
             displayReminders();
             
-            // Show confirmation
-            showNotification('Reminder deleted successfully!');
-        }
-        
-        // Function to show notifications
-        function showNotification(message) {
-            // Create notification element
+            // Show notification
             const notification = document.createElement('div');
             notification.style.cssText = `
                 position: fixed;
@@ -1580,17 +1433,15 @@
                 z-index: 1000;
                 font-weight: 600;
             `;
-            notification.textContent = message;
+            notification.textContent = 'Reminder deleted!';
             
             document.body.appendChild(notification);
             
-            // Remove after 3 seconds
             setTimeout(() => {
                 notification.remove();
             }, 3000);
         }
         
-        // Add new reminder
         reminderForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -1614,20 +1465,10 @@
             displayReminders();
             reminderForm.reset();
             
-            // Show confirmation
             alert('Reminder added successfully!');
         });
         
-        // Initial display of reminders
+        // Initial display
         displayReminders();
-        
-        // Initialize UI state
-        document.getElementById('voice-input').disabled = true;
-        document.getElementById('stop-convai').disabled = true;
-        
-        // Load saved settings on page load
-        if (convaiConfig.apiKey && convaiConfig.characterId) {
-            document.getElementById('start-convai').disabled = false;
-        }
     });
 </script>
