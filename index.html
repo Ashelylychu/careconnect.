@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareConnect - Family & Elderly Communication Platform</title>
+    <title>CareConnect - Caregiver & Elderly Communication Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?caregiver=Playfair+Display:wght@400;500;600;700&caregiver=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #1b4965;
@@ -26,7 +26,7 @@
         }
 
         body {
-            font-family: 'Quicksand', sans-serif;
+            font-caregiver: 'Quicksand', sans-serif;
             background: linear-gradient(135deg, #f8fbff 0%, #e6f4ff 100%);
             color: var(--dark);
             line-height: 1.6;
@@ -59,7 +59,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            font-family: 'Playfair Display', serif;
+            font-caregiver: 'Playfair Display', serif;
             font-weight: 700;
             font-size: 1.9rem;
         }
@@ -111,7 +111,7 @@
         }
 
         .hero h1 {
-            font-family: 'Playfair Display', serif;
+            font-caregiver: 'Playfair Display', serif;
             font-size: 3.5rem;
             margin-bottom: 1.5rem;
             color: var(--primary);
@@ -148,7 +148,7 @@
         }
 
         .section-title {
-            font-family: 'Playfair Display', serif;
+            font-caregiver: 'Playfair Display', serif;
             font-size: 2.5rem;
             text-align: center;
             margin-bottom: 3.5rem;
@@ -194,7 +194,7 @@
             background: linear-gradient(135deg, var(--primary), var(--accent));
             color: var(--white);
             text-align: center;
-            font-family: 'Playfair Display', serif;
+            font-caregiver: 'Playfair Display', serif;
             font-size: 1.4rem;
         }
 
@@ -248,7 +248,7 @@
             padding: 1.2rem;
             background: transparent;
             border: none;
-            font-family: 'Quicksand', sans-serif;
+            font-caregiver: 'Quicksand', sans-serif;
             font-weight: 700;
             font-size: 1.1rem;
             color: var(--dark);
@@ -299,7 +299,7 @@
             color: var(--white);
             padding: 1.2rem;
             text-align: center;
-            font-family: 'Playfair Display', serif;
+            font-caregiver: 'Playfair Display', serif;
             font-size: 1.3rem;
         }
 
@@ -350,7 +350,7 @@
             border: 1px solid var(--light);
             border-radius: 50px;
             outline: none;
-            font-family: 'Quicksand', sans-serif;
+            font-caregiver: 'Quicksand', sans-serif;
             font-size: 1.05rem;
             transition: var(--transition);
         }
@@ -447,7 +447,7 @@
         }
 
         .video-info h3 {
-            font-family: 'Playfair Display', serif;
+            font-caregiver: 'Playfair Display', serif;
             font-size: 1.6rem;
             margin-bottom: 0.5rem;
         }
@@ -506,7 +506,7 @@
             padding: 1rem 1.5rem;
             border: 1px solid var(--light);
             border-radius: 12px;
-            font-family: 'Quicksand', sans-serif;
+            font-caregiver: 'Quicksand', sans-serif;
             font-size: 1.05rem;
             transition: var(--transition);
         }
@@ -615,7 +615,7 @@
         }
 
         .footer-section h3 {
-            font-family: 'Playfair Display', serif;
+            font-caregiver: 'Playfair Display', serif;
             margin-bottom: 1.8rem;
             position: relative;
             font-size: 1.5rem;
@@ -726,7 +726,7 @@
     <section class="hero" id="home">
         <div class="container">
             <h1>Connecting Generations with Compassionate Care</h1>
-            <p>CareConnect bridges the communication gap between elderly individuals and their caregivers with AI-powered assistance, health monitoring, and family coordination.</p>
+            <p>CareConnect bridges the communication gap between elderly individuals and their caregivers with AI-powered assistance, health monitoring, and caregiver coordination.</p>
             <a href="#ai-assistant" class="btn">Start Connecting Today</a>
         </div>
     </section>
@@ -751,7 +751,7 @@
             <div class="card-icon">
                 <i class="fas fa-hands-helping"></i>
             </div>
-            <p>Coordinate care schedules, track health metrics, and communicate effectively with family members.</p>
+            <p>Coordinate care schedules, track health metrics, and communicate effectively with caregiver members.</p>
         </div>
     </div>
 </div>
@@ -826,19 +826,19 @@
                         <div class="chat-header">
                             <h3>Caregiver Updates & Insights</h3>
                         </div>
-                        <div class="chat-messages" id="family-chat-messages">
+                        <div class="chat-messages" id="caregiver-chat-messages">
                             <div class="message bot-message">
                                 Welcome to the caregiver interface. Here you can check on your loved one's wellbeing and get personalized care recommendations.
                             </div>
                         </div>
                         <div class="chat-input">
-                            <input type="text" id="family-input" placeholder="Ask about your loved one...">
-                            <button id="family-send-btn"><i class="fas fa-paper-plane"></i></button>
+                            <input type="text" id="caregiver-input" placeholder="Ask about your loved one...">
+                            <button id="caregiver-send-btn"><i class="fas fa-paper-plane"></i></button>
                         </div>
                     </div>
                     <div class="avatar-container">
                         <div class="avatar">
-                            <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZmowZXR0ZHNpbDR1cWlvaW5vdmN6dXphNTA4aWtudjl0MjBpMjh0ciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1JmGiBtqTuehfYxuy9/giphy.gif" alt="Family Support AI">
+                            <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZmowZXR0ZHNpbDR1cWlvaW5vdmN6dXphNTA4aWtudjl0MjBpMjh0ciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1JmGiBtqTuehfYxuy9/giphy.gif" alt="caregiver Support AI">
                         </div>
                         <p style="margin-top: 1.5rem; text-align: center; font-weight: 600; color: var(--primary);">Stay connected with your loved one's care and wellbeing.</p>
                     </div>
@@ -907,7 +907,7 @@
         <h2 class="section-title">Medication & Appointment Reminders</h2>
         
         <div class="reminder-form">
-            <h3 style="font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 1.5rem;">Add New Reminder</h3>
+            <h3 style="font-caregiver: 'Playfair Display', serif; color: var(--primary); margin-bottom: 1.5rem;">Add New Reminder</h3>
             <form id="reminder-form">
                 <div class="form-group">
                     <label for="reminder-title">Reminder Title</label>
@@ -1045,7 +1045,7 @@
                 addElderlyMessage(message, true);
                 elderlyInput.value = '';
                 
-                // Store the elderly's message for family view
+                // Store the elderly's message for caregiver view
                 storeElderlyMessage(message);
                 
                 // Simulate thinking delay (like waiting for ConvAI response)
@@ -1063,12 +1063,12 @@
                 }
             });
             
-            // Family Chatbot functionality
-            const familyChatMessages = document.getElementById('family-chat-messages');
-            const familyInput = document.getElementById('family-input');
-            const familySendBtn = document.getElementById('family-send-btn');
+            // caregiver Chatbot functionality
+            const caregiverChatMessages = document.getElementById('caregiver-chat-messages');
+            const caregiverInput = document.getElementById('caregiver-input');
+            const caregiverSendBtn = document.getElementById('caregiver-send-btn');
             
-            // Store elderly messages for family view
+            // Store elderly messages for caregiver view
             let elderlyMessages = [];
             
             function storeElderlyMessage(message) {
@@ -1082,31 +1082,31 @@
                     elderlyMessages = elderlyMessages.slice(-10);
                 }
                 
-                // Update family view if active
-                if (document.getElementById('family-tab').classList.contains('active')) {
-                    updateFamilyChat();
+                // Update caregiver view if active
+                if (document.getElementById('caregiver-tab').classList.contains('active')) {
+                    updatecaregiverChat();
                 }
             }
             
-            // Update family chat with elderly messages and insights
-            function updateFamilyChat() {
+            // Update caregiver chat with elderly messages and insights
+            function updatecaregiverChat() {
                 // Clear current messages except the first one
-                while (familyChatMessages.children.length > 1) {
-                    familyChatMessages.removeChild(familyChatMessages.lastChild);
+                while (caregiverChatMessages.children.length > 1) {
+                    caregiverChatMessages.removeChild(caregiverChatMessages.lastChild);
                 }
                 
                 // Add elderly messages and insights
                 if (elderlyMessages.length > 0) {
                     const recentMessage = elderlyMessages[elderlyMessages.length - 1];
-                    addFamilyMessage(`Your loved one recently said: "${recentMessage.text}"`, false);
+                    addcaregiverMessage(`Your loved one recently said: "${recentMessage.text}"`, false);
                     
                     // Add care insights based on the message (simulating ConvAI analysis)
                     const insight = generateCareInsight(recentMessage.text);
                     if (insight) {
-                        addFamilyMessage(insight, false);
+                        addcaregiverMessage(insight, false);
                     }
                 } else {
-                    addFamilyMessage("No recent messages from your loved one yet. Check back later for updates.", false);
+                    addcaregiverMessage("No recent messages from your loved one yet. Check back later for updates.", false);
                 }
             }
             
@@ -1141,18 +1141,18 @@
                 return null;
             }
             
-            // Function to add a message to the family chat
-            function addFamilyMessage(message, isUser) {
+            // Function to add a message to the caregiver chat
+            function addcaregiverMessage(message, isUser) {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message');
                 messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
                 messageDiv.textContent = message;
-                familyChatMessages.appendChild(messageDiv);
-                familyChatMessages.scrollTop = familyChatMessages.scrollHeight;
+                caregiverChatMessages.appendChild(messageDiv);
+                caregiverChatMessages.scrollTop = caregiverChatMessages.scrollHeight;
             }
             
-            // Predefined responses for the family chatbot (simulating ConvAI)
-            const familyBotResponses = {
+            // Predefined responses for the caregiver chatbot (simulating ConvAI)
+            const caregiverBotResponses = {
                 'how are they': 'Let me check on your loved one...',
                 'update': 'Here\'s the latest from your loved one:',
                 'reminders': 'You can set up reminders for your loved one in the Reminders section.',
@@ -1162,47 +1162,47 @@
                 'default': 'I can provide updates on your loved one, help with care recommendations, or assist with reminder settings.'
             };
             
-            // Function to get family bot response (simulating ConvAI)
-            function getFamilyBotResponse(userMessage) {
+            // Function to get caregiver bot response (simulating ConvAI)
+            function getcaregiverBotResponse(userMessage) {
                 // In a real implementation, this would be an API call to ConvAI
                 const lowerMessage = userMessage.toLowerCase();
                 
-                for (const key in familyBotResponses) {
+                for (const key in caregiverBotResponses) {
                     if (lowerMessage.includes(key)) {
-                        return familyBotResponses[key];
+                        return caregiverBotResponses[key];
                     }
                 }
                 
-                return familyBotResponses['default'];
+                return caregiverBotResponses['default'];
             }
             
-            // Send family message function
-            function sendFamilyMessage() {
-                const message = familyInput.value.trim();
+            // Send caregiver message function
+            function sendcaregiverMessage() {
+                const message = caregiverInput.value.trim();
                 if (message === '') return;
                 
-                addFamilyMessage(message, true);
-                familyInput.value = '';
+                addcaregiverMessage(message, true);
+                caregiverInput.value = '';
                 
                 // Simulate thinking delay (like waiting for ConvAI response)
                 setTimeout(() => {
-                    const response = getFamilyBotResponse(message);
-                    addFamilyMessage(response, false);
+                    const response = getcaregiverBotResponse(message);
+                    addcaregiverMessage(response, false);
                     
                     // If asking for an update, show recent elderly messages
                     if (message.toLowerCase().includes('how') || message.toLowerCase().includes('update')) {
                         setTimeout(() => {
-                            updateFamilyChat();
+                            updatecaregiverChat();
                         }, 500);
                     }
                 }, 1000);
             }
             
-            // Event listeners for family chat
-            familySendBtn.addEventListener('click', sendFamilyMessage);
-            familyInput.addEventListener('keypress', function(e) {
+            // Event listeners for caregiver chat
+            caregiverSendBtn.addEventListener('click', sendcaregiverMessage);
+            caregiverInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
-                    sendFamilyMessage();
+                    sendcaregiverMessage();
                 }
             });
             
